@@ -43,7 +43,8 @@
 % Title
 \title{Practical TikZ tutorial}
 % Author (avoiding PDF string problems)
-\author{Pol del Aguila Pla \texorpdfstring{\\}{} Ph.D. candidate at the KTH Royal Institute of Technology \texorpdfstring{\\}{} \href{mailto://poldap@kth.se}{\texttt{poldap@kth.se}}, \href{https://people.kth.se/~poldap}{\texttt{people.kth.se/\texorpdfstring{$\sim$}{}poldap}} }
+\author{Pol del Aguila Pla \texorpdfstring{\\}{} Ph.D. candidate at the KTH Royal Institute of Technology \texorpdfstring{\\}{} \href{mailto://poldap@kth.se}{\texttt{poldap@kth.se}}, \href{https://people.kth.se/~poldap}{\texttt{people.kth.se/\texorpdfstring{$\sim$}{}poldap}} \texorpdfstring{\\}{}
+\href{https://github.com/poldap/tikz-tutorial/fork}{Fork this tutorial on GitHub: github.com/poldap/tikz-tutorial}}
 % Date
 \date{January 2019}
 
@@ -52,6 +53,11 @@
 \maketitle
 
 \begin{frame}{Motivating example - $0$ words introduction}
+    
+    \begin{itemize}
+        \item The interest of a research topic in a simple animation. 
+        \item Creativity and clear communication.
+    \end{itemize}
     
     \begin{center}
 		\begin{tikzpicture}
@@ -99,15 +105,16 @@
 			}
 			\end{tikzpicture} 
 			\\
-			The\only<7->{ Privacy-Aware} Internet of Things
+			The \only<7->{{\color{red} Privacy-Aware}} Internet of Things
 	\end{center}
 	\small Introduction to an old presentation - will not be published.
 \end{frame}
 
-\begin{frame}{Diagram mode}
+\begin{frame}{Simply TikZ - ex.}
 
     \vspace{-30pt}
     
+    % An example of the outcomes one can get from simple TikZ commands. Do not try to understand straight away, go first to the next slide, "Simply TikZ - Basics"
     \begin{center}
         \begin{tikzpicture}[scale = 0.9,xscale = 1.2]
             % Define styles - Equivalent to repeating everything inside [] every time the style is used
@@ -185,78 +192,102 @@
     
     \vspace{-10pt}
     
+    % Citation to the paper where this figure appears
     \footnotesize Part of \fullcite{AguilaPla2019}
 \end{frame}
-\begin{frame}{Summary - Diagram mode (simply TikZ)}
+
+\begin{frame}{Simply TikZ - Basics}
+
+    % Basic vocabulary of using TikZ for drawing. Experiment by modifying these simple examples.
+    
     \begin{itemize}
+        % Listing of basic commands in the slide
         \item<+-> Diagram mode keywords: \texttt{node}, \texttt{anchor}, \texttt{draw}, \texttt{rotate}, \texttt{opacity}, \texttt{--},  \texttt{-- ++}, \texttt{-}, \texttt{->}, \texttt{<-}, \texttt{thick}, \texttt{very thin}, \texttt{dashed}, \texttt{dotted}, \texttt{dashdotted}, \texttt{midway}, \texttt{below}, \texttt{fill}
+        
+        % Listing of code for the first example figure
         \item<+-> \texttt{\textbackslash node[draw] (a) at (-1,0) \{[A]\}; \textbackslash node (b) at (1,0) \{[B]\}; \textbackslash draw[<->] (a) -- (b);}
+        % First example. MODIFY HERE and EXPERIMENT.
         \begin{center}
             \begin{tikzpicture}
                 \node[draw] (a) at (-1,0) {[A]}; \node (b) at (1,0) {[B]}; \draw[<->] (a) -- (b);
             \end{tikzpicture}
         \end{center}
+        
+        % Listing of code for the second example figure
         \item<+-> \texttt{\textbackslash node[draw,shape=circle,rotate=90] at (-1,0) \{\$1\$\}; \textbackslash node[draw=blue,very thick,shape=circle,fill=red,opacity=0.5,anchor=south] (b) at (1,0) \{\$2\$\}; \textbackslash draw[-latex,thick,dashdotted] (a.south) --++ (0,-0.4) --++ (1,0) -- (b.west) node[midway,above,rotate=60] \{middle\};}
+        % Second example. MODIFY HERE and EXPERIMENT.
         \begin{center}
             \begin{tikzpicture}
                 \node[draw,shape=circle,rotate=90] at (-1,0) {$1$}; \node[draw=blue,very thick,shape=circle,fill=red,opacity=0.5,anchor=south] (b) at (1,0) {$2$}; \draw[-latex,thick,dashdotted] (a.south) --++ (0,-0.4) --++  (1,0) -- (b.west) node[midway,above,rotate=60] {middle};
             \end{tikzpicture}
         \end{center}
+        
     \end{itemize}
+    % Now, try to understand how the diagram in the previous slide, "Simply TikZ - ex." and experiment with it. What would you have done differently? 
 \end{frame}
 
-\begin{frame}{The same tools + 3D - Diagram mode (simply TikZ)}
+\begin{frame}{Simply TikZ + 3D + loops - ex.}
     
     \vspace{-15pt}
 
     \begin{center}
-        % Thanks to the array package, it is easy to creat cells with paragraph structure (text folding at the end of line, etc.). You need to specify the width, however.
+        % Thanks to the array package, it is easy to create cells in a tabular with paragraph structure (text folding at the end of line, etc.). You need to specify the width, however.
         \begin{tabular}{m{.5\textwidth}m{.4\textwidth}}
             % The practical way of handling TikZ figures, as separate .tex files you input
             \input{figs/discretization_grid}
+            % Explore the use of variables (\def), commands (\newcommand), for loops (\foreach) and color definitions (gray!40 = gray!40!white) in the published figure in figs/discretization_grid. MODIFY and EXPERIMENT. The simplicity of 3D comes from the great package tikz-3dplot.
             &
+            % Listing of new concepts with respect to the previous
             \begin{itemize}
                 \item More concepts and keywords: \texttt{\textbackslash def}, \texttt{\textbackslash foreach}, \texttt{\textbackslash pgfmathsetmacro}, \texttt{gray!40!blue}, \texttt{\textbackslash newcommand}
             \end{itemize}
+            % Citation to paper where this figure appears
             {\footnotesize 
-            Part of \fullcite{AguilaPla2017}
+                Part of \fullcite{AguilaPla2017}
             }
         \end{tabular}
     \end{center}
 \end{frame}
 
-\begin{frame}{Simple plotting - Diagram mode (simply TikZ)}
+\begin{frame}{Simply TikZ for plotting}
 
     \vspace{-10pt}
     
     \begin{center}
+        % Explore the use of 'plot file', 'plot function', and the keywords 'domain' and 'samples'. MODIFY and EXPERIMENT.
+        
+        % Set the scales of each axis and start figure
         \begin{tikzpicture}[xscale=1,yscale=15]
             % Draw axis
                 \draw [->] (0,0) -- (0,0.3) node [anchor=south] {$f_x(x)$};
                 \draw [->] (-5,0) -- (5.1,0) node [anchor=west] {$x$};
-            % Draw ticks and labels
+            % Draw labels
             % X axis
                 \foreach \x in {-5, -4, ..., 5}
                     \draw (\x,0) node[anchor=north] {\scriptsize $\x$};
-            % Y axis
+            % Y axis (with arbitrary labels, double for)
                 \foreach \y/\ytext in {0.125/\tfrac{1}{8},0.25/\tfrac{1}{4}}
                     \draw (0,\y) node[anchor=west] {\scriptsize $\ytext$};
             
-            % Plot for the actual distribution
+            % Plot for the actual distribution of some data
+            % EXPERIMENT with changing the function expression
+            % what happens with less samples?
                 \draw[smooth,domain=-5:5,samples=400] plot 
                 function{ (1/sqrt(2*pi))*( % Gaussian normalization factor (with std = 1)
                 0.5*sqrt(2)*exp((-(x+2)**2))+ % Gaussian with weight (prob) 0.25 and stdeviation 1/sqrt(2) around -2
                 0.5*exp((-(x-1)**2)/2))}; % Gaussain with weight (prob) 0.75 and stdeviation 1 around 1
             
             % Plot sampled data
-                % The file data.txt is only two columns of numbers separated by spaces
+                % The file data.txt is only two columns of numbers separated by spaces, check it out.
                 \draw plot[only marks, mark=*, mark size=0.07pt, mark options={color=red!80}] file{figs/data.txt};
                 
             % Plot histogram estimation
+                % Why set the fill opacity at 0.5? Does it help for this figure?
                 \draw[fill=orange, fill opacity=0.5] plot[ybar] file{figs/hist.txt};
                 \draw[orange] node at (4,0.27) {\scriptsize Histogram};
             
             % Plot parametric model fittings
+                % What does smooth do? let's try to change the colors, thicknesses, opacities, etc? What if we want markers to indicate the data points?
                 \draw[color=blue] plot[smooth] file{figs/gen_pareto.txt};
                 \draw[color=red] plot[smooth] file{figs/gen_extr_value.txt};
                 \draw[color=green] plot [smooth] file{figs/normal.txt};
@@ -280,7 +311,7 @@
       
 \end{frame}
 
-\begin{frame}{Scripted plotting - Diagram mode (simply TikZ)}
+\begin{frame}{Simply TikZ scripted plotting - ex.}
     
     \vspace{-15pt}
     
@@ -300,15 +331,25 @@
             
 \end{frame}
 
-\begin{frame}{Easier plotting - PGFplots}
+\begin{frame}{PGFplots - Easier plotting}
+    % Column environment from beamer. Good for this kind of alignment.
     \begin{columns}[T]
+        % Figure column, EXPERIMENT here
         \begin{column}{.48\textwidth}
+            % The simplicity of PGFplots is appealing. Try to configure this simple plot to your liking. Try adding markers. Can you set how many samples of the function are used for the drawing? Change the function, how does it behave compared to "Simply TikZ for plotting"? Can you set the minimum and maximum values for each axis?
             \begin{tikzpicture}
-                \begin{axis}[title = {$f(x) = x^2$},grid = major,xlabel = {$x$},ylabel = {$f(x)$},width=\textwidth]
+                \begin{axis}[
+                    title = {$f(x) = x^2$},
+                    grid = major,
+                    xlabel = {$x$},
+                    ylabel = {$f(x)$},
+                    width=\textwidth
+                ]
                     \addplot[domain = -1:1] {x^2};
                 \end{axis}
             \end{tikzpicture}
         \end{column}\hfill
+        % Listing of the code for the example figure
         \begin{column}{.48\textwidth}
             \vspace{40pt}
             \texttt{\textbackslash begin\{axis\}[
@@ -318,8 +359,9 @@
     \end{columns}
 \end{frame}
 
-\begin{frame}{Easier 3D plotting - PGFplots}
+\begin{frame}{PGFplots - Easier 3D plotting}
     \begin{columns}[T]
+    % Figure column, EXPERIMENT here. Can you change the colours? Can you include a colorbar? Change the function and the number of samples.
     \begin{column}{.45\textwidth}
             \begin{tikzpicture}
                 \begin{axis}[title = {$f(x,y) = x^2 + y^2$},grid = major,xlabel = {$x$},ylabel = {$y$},zlabel={$f(x,y)$},width=\textwidth]
@@ -327,6 +369,7 @@
                 \end{axis}
             \end{tikzpicture}
         \end{column}\hfill
+        % Listing of the code for the example figure
         \begin{column}{.48\textwidth}
         
             \vspace{30pt}
@@ -339,44 +382,62 @@
 \end{frame}
 
 \begin{frame}{PGFplots from Python (matplotlib2tikz)}
-        \only<1>{
-            \begin{center}
-                \includegraphics[keepaspectratio=true,width=.95\textwidth]{figs/creating_example.png}
-            \end{center}
-        }
-        \only<2>{
-            \begin{columns}
-                \begin{column}{.58\textwidth}
-                    \input{figs/example}
-                \end{column}\hfill
-                \begin{column}{.4\textwidth}
-                    \texttt{\textbackslash input\{figs/example\} }
-                \end{column}
-            \end{columns}
-        }
-        \only<3>{
-            \input{figs/example_improved}
-            \begin{itemize}
-                \item less than $5$ minutes of work away (compare \texttt{figs/example.tex} with \texttt{figs/example\_improved.tex}).
-            \end{itemize}
-        }
+    % If you are familiar with matplotlib, explore the screen capture of a Jupyter notebook on the slide
+    \only<1>{
+        \begin{center}
+            \includegraphics[keepaspectratio=true,width=.95\textwidth]{figs/creating_example.png}
+        \end{center}
+    }
+    % Simply importing the file saved by the Jupyter notebook, we obtain this very good starting point.
+    \only<2>{
+        \begin{columns}
+            % Input figure
+            \begin{column}{.58\textwidth}
+                \input{figs/example}
+            \end{column}\hfill
+            % Listing of input figure
+            \begin{column}{.4\textwidth}
+                \texttt{\textbackslash input\{figs/example\} }
+            \end{column}
+        \end{columns}
+    }
+    % Small modifications provide an amazing-looking figure with scalable graphics, font integration, re-usability, and most of the other advantages of TikZ in minutes
+    \only<3>{
+        % EXPLORE the differences between 'figs/example' and 'figs/example_improved' and EXPERIMENT
+        \input{figs/example_improved}
+        % Same message in the slide
+        \begin{itemize}
+            \item less than $5$ minutes of work away (compare \texttt{figs/example.tex} with \texttt{figs/example\_improved.tex}).
+        \end{itemize}
+    }
 \end{frame}
 
-\begin{frame}{PGFplots from Python (matplotlib2tikz)}
-    \input{figs/convergence_networks}
+\begin{frame}{PGFplots from Python (matplotlib2tikz) - ex.}
+
+    \vspace{-10pt}
+
+    \begin{center}
+        \input{figs/convergence_networks}
+    \end{center}
     
-    \footnotesize Part of \fullcite{AguilaPla2019}
+    \vspace{-10pt}
+    
+    Explore \href{https://github.com/poldap/SpotNet}{github.com/poldap/SpotNet} to see the generation of these figures in Python.
+    
+    \vspace{5pt}
+    
+    {\footnotesize Part of \fullcite{AguilaPla2019}}
 \end{frame}
 
 \begin{frame}{Practical TikZ Tutorial - Remarks}
     \begin{itemize}
         \item Use the same styles (fonts, font sizes, math symbols, etc.) across your papers, i.e., in your figures, in your text, etc.
         \item Work only with scalable graphics
-        \item Put no limits on the drawing possibilities
+        \item Put no limits on the drawing possibilities, promote creativity and clear communication
         \item Re-use drawings and figures, get your time back
         \item Use TikZ :-D
     \end{itemize}
-    A word of warning: local compilation will require \texttt{pdflatex -shell-escape} or \texttt{pdflatex --shell-escape} for many of the examples.
+    A word of warning: local compilation will require \texttt{pdflatex -shell-escape} or \texttt{pdflatex --shell-escape} (depending on your \LaTeX distribution) for many of the examples. Compliation time will benefit from the use of \texttt{\textbackslash usetikzlibrary\{external\}} \texttt{\textbackslash tikzexternalize} in the preamble of your document.
 \end{frame}
 
 \end{document}

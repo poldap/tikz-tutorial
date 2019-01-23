@@ -1,0 +1,16 @@
+% Draw rectangle and fill it up
+\draw (\xmin,\ymax-\legh) rectangle (\xmax,\ymax);
+\fill[white,fill opacity=1,opacity=1] (\xmin,\ymax-\legh) rectangle (\xmax,\ymax);
+% Placement, name and colour for methods
+\foreach \num/\name/\c in {0.04/$g_k^{\mathrm{br3}}$/black!50!green,
+                           0.19/$g_k^{\mathrm{br1}}$/black,
+                           0.34/noise-free/black!50!red,
+                           0.525/noisy/red,
+                           0.67/deconvolution/blue}{
+    % Small line and name
+    \draw[\c, thick] (\num*\xmax-\num*\xmin+\xmin,\ymax-\legh/2) -- (\num*\xmax-\num*\xmin+\xmin+\indicatorw,\ymax-\legh/2) node [anchor=west,color=black] {\tiny \name};
+  }
+% Placement, name and colour for human
+\def\num{0.9} \def\name{human}
+% Small line and name
+\draw[black,dash pattern=on 2.3pt off 1.1pt on 0.8pt off 1.1pt,thick] (\num*\xmax-\num*\xmin+\xmin,\ymax-\legh/2) -- (\num*\xmax-\num*\xmin+\xmin+\indicatorw,\ymax-\legh/2) node [anchor=west,color=black] {\tiny \name};

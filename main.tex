@@ -1,0 +1,382 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Allow for any UTF8 input (accepts é, è, ö, ä, å, etc.)
+\usepackage[utf8]{inputenc}
+% Hyperref for links inside the document (at cite, ref, or others)
+\usepackage{hyperref}
+
+% Drawings with TikZ, what this tutorial is all about
+% TikZ ist kein Zeichenprogramm - TikZ Is Not a Drawing Program
+% Part of PGF (Portable Graphics Format)
+\usepackage{tikz}
+% Convenient TikZ libraries
+% Calc for enabling mathematical operations between points
+\usetikzlibrary{calc}
+% Shapes for importing shapes to easily include in your drawing
+\usetikzlibrary{shapes}
+% More complex and tweakable arrow shapes (generally not needed)
+\usetikzlibrary{arrows}
+% Package with more TikZ symbols (generally not needed)
+\usepackage{tikzsymbols}
+% Package with TikZ symbols for drawing circuits (generally not needed)
+\usepackage{circuitikz}
+% 3D TikZ (generally not needed)
+\usepackage{tikz-3dplot}
+
+% PGFplots- Package to make it easier to plot things with TikZ
+\usepackage{pgfplots}
+% For subplots using PGFplots
+\usepgfplotslibrary{groupplots}
+% If including PGFplots, it is adviced to set the compatibility to a fixed version that works. For playing, use the newest.
+\pgfplotsset{ compat = newest }
+
+% Graphicx package for images
+\usepackage{graphicx}
+
+% My recommendation for tables and complex array structures in LaTeX
+\usepackage{array}
+% My recommendation for reference handling with bibtex files in beamer
+\usepackage[backend=bibtex,doi=false,isbn=false,url=false,style=ieee]{biblatex}
+\usepackage{bibentry}
+\bibliography{papers}
+
+% Title
+\title{Practical TikZ tutorial}
+% Author (avoiding PDF string problems)
+\author{Pol del Aguila Pla \texorpdfstring{\\}{} Ph.D. candidate at the KTH Royal Institute of Technology \texorpdfstring{\\}{} \href{mailto://poldap@kth.se}{\texttt{poldap@kth.se}}, \href{https://people.kth.se/~poldap}{\texttt{people.kth.se/\texorpdfstring{$\sim$}{}poldap}} }
+% Date
+\date{January 2019}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Motivating example - $0$ words introduction}
+    
+    \begin{center}
+		\begin{tikzpicture}
+		    % My house
+		    % A bed
+			\node at (0,0) {\Bed[4]};
+			% An oven
+			\node at (8,0) {\oven[4]};
+			% The walls of my home
+			\draw (-1.4,-0.6) rectangle (9,2.5);
+			% Draw a table
+			\draw[thick] (5,-0.5) -- (5,0.4) -- (4.8,0.4) -- (4.8,0.6) -- (6.2,0.6) -- (6.2,0.4) -- (6,0.4) -- (6,-.5) -- (5.9,-.5) -- (5.9,00.4) -- (5.1,0.4) -- (5.1,-0.5) -- cycle;
+			% Sleeping
+			\only<1>{
+			    \node at (-0.1,0.2) [rotate=90] {\Strichmaxerl[6][60][-60]};
+			}
+	    	% Waking up
+			\only<2>{
+			    \node at (1.5,0.2) {\Strichmaxerl[6][50][-50]};
+			}
+		    % On my way
+			\only<3>{
+			    \node at (2.5,0.2) {\Strichmaxerl[6][50][-50]};
+				\node at (-.2,-.22) [txantenna]{};
+			}
+			% There
+			\only<4->{
+			    \only<4>{
+				    \node at (3.5,0.2) {\Strichmaxerl[6][50][-50]};
+				}
+				\only<5>{
+				    \node at (4.3,0.2) {\Strichmaxerl[6][50][-50]};
+				}
+				\only<6->{
+				    \node at (4.3,0.2) {\Strichmaxerl[6][-45][45]};
+				}
+				\node at (8.4,.8) {\pot[1.8]};
+				\node at (7.35,.8) {\fryingpan[2]};
+				\node at (5,.78) {\Coffeecup[1]};
+			}
+			% Spies
+			\only<7->{
+			    \draw (11,-0.6) -- (9.5,-0.6) -- (9.5,2.5) -- (11,2.5);
+				\node[red] at (10,0.2) {\Strichmaxerl[6]};
+			}
+			\end{tikzpicture} 
+			\\
+			The\only<7->{ Privacy-Aware} Internet of Things
+	\end{center}
+	\small Introduction to an old presentation - will not be published.
+\end{frame}
+
+\begin{frame}{Diagram mode}
+
+    \vspace{-30pt}
+    
+    \begin{center}
+        \begin{tikzpicture}[scale = 0.9,xscale = 1.2]
+            % Define styles - Equivalent to repeating everything inside [] every time the style is used
+            \tikzstyle{imagearrow} = [line width=.5mm,draw=blue!80!white,-triangle 45,postaction={draw, line width=1.5mm, shorten >=2mm, -}]
+            \tikzstyle{imageline} = [line width=1.5mm,draw=blue!80!white,-];
+            \tikzstyle{tensorarrow} = [line width=.5mm,draw=orange!80!white,-triangle 45,postaction={draw, line width=1.5mm, shorten >=2mm, -}]
+            \tikzstyle{tensorline} = [line width=1.5mm,draw=orange!80!white,-];
+            \tikzstyle{mult} = [isosceles triangle, draw, isosceles triangle apex angle=60, isosceles triangle stretches]
+            % Nodes in the first hidden layer
+            % Convolutional
+            	% Direct operator
+            	\node (c11) at (5,5) [draw,fill=white,shape=rectangle,inner sep = 4]{$h^{(1)}_1$};
+            	\node (c12) at (5,4) [draw,fill=white,shape=rectangle,inner sep = 4]{$h^{(1)}_2$};
+            	\node (c1dots) at (5,2) {\scriptsize$\begin{array}{c}\vdots\\\\(K-3)\\\vdots\end{array}$};
+            	\node (c1K) at (5,0) [draw,fill=white,shape=rectangle,inner sep = 4]{$h^{(1)}_K$};
+            	% Adjoint operator
+            	\node (c11m) at (9,5) [draw,fill=white,shape=rectangle,inner sep = 4]{$-\tilde{h}^{(1)}_1$};
+            	\node (c12m) at (9,4) [draw,fill=white,shape=rectangle,inner sep = 4]{$-\tilde{h}^{(1)}_2$};
+            	\node (c1mdots) at (9,2) {\scriptsize$\begin{array}{c}\vdots\\\\(K-3)\\\vdots\end{array}$};
+            	\node (c1Km) at (9,0) [draw,fill=white,shape=rectangle,inner sep = 4]{$-\tilde{h}^{(1)}_K$};
+            % Sums
+	            % Image
+                	\node (S1Ia) at (6.25,4) [draw,fill=white,shape=circle,inner sep=1pt] {\large $+$};
+                	\node (S1Ib) at (7.3,4) [draw,fill=white,shape=circle,inner sep=1pt] {\large $+$};
+                % Tensor
+            	\node (S1Ta) at (10.75,2.5) [draw,fill=white,shape=circle,inner sep=1pt] {\large $+$};
+	            \node (S1Tb) at (14,2.5) [draw,fill=white,shape=circle,inner sep=1pt] {\large $+$};
+            % Multipliers by scalar
+	            % Image
+                \node (mul1I) at (7.3,5.5) [mult,fill=white,inner sep = 1,rotate=-90] {\scriptsize $-1$};
+	            % Tensor
+	            \node (mul1T) at (14,.5) [mult,fill=white,inner sep = 1,rotate=90]{$\beta^{(1)}$};
+            % Non-linearity
+                \node (NL1) at (12.4,2.5) [draw,fill=white,shape=rectangle,inner sep = 4]{$\alpha^{(1)}\varphi_{\lambda^{(1)}}$};
+            % Lines and arrows in the first hidden layer
+                % Input to convolutional 
+                    \draw [imagearrow] (4.075,5) -- (c11); 
+                    \draw [imagearrow] (4.075,4) -- (c12);
+                    \draw [imagearrow] (4.075,0) -- (c1K); 
+                % Convolutional to image sums
+                    \draw [imagearrow] (c12) -- (S1Ia); 
+                    \draw [imagearrow] (c11) -- (6.25,5) -- (S1Ia); 
+                    \draw [imagearrow] (c1K) -- (6.25,0) -- (S1Ia);
+                    \draw [imagearrow] (S1Ia) -- (S1Ib);
+                % Recursive-type link from input
+	                % Input to multiplier
+	                \draw [imagearrow] (6.3,6.5) -- (7.3,6.5) -- (mul1I);
+	                % Multiplier to sum
+	                \draw [imagearrow] (mul1I) -- (S1Ib);
+                % Image sums to adjoint convolutional
+                    \draw [imagearrow] (S1Ib) -- (c12m); 
+                    \draw [imagearrow] (S1Ib) -- (7.8,4) -- (7.8,5) --(c11m); 
+                    \draw [imagearrow] (S1Ib) -- (7.8,4) -- (7.8,0) --(c1Km); 
+                % Adjoint convolutional to tensor sums
+                	% Image lines
+                    	\draw [imageline] (c11m) -- (9.9,5); 
+                    	\draw [imageline] (c12m) -- (9.9,4); 
+                    	\draw [imageline] (c1Km) -- (9.9,0);
+                	% Tensor lines
+                    	\draw [tensorline] (9.9,-.075) -- (9.9,5.075);
+                    	\draw [tensorarrow] (9.9,2.5) -- (S1Ta);
+                    	\draw [tensorarrow] (9.75,-0.75) -- (10.75,-0.75) -- (S1Ta);
+                % Tensor sum to non-linearity
+                    \draw[tensorarrow] (S1Ta) -- (NL1);
+                % Non-linearity to tensor sum 
+                    \draw[tensorarrow] (NL1) -- (S1Tb);
+                % Recursive type link to previous iterate
+                    \draw[tensorarrow] (13,-1.1) -- (14,-1.1) -- (mul1T); 
+                    \draw[tensorarrow] (mul1T) -- (S1Tb);
+                % Tensor sum to next layer
+                    \draw[tensorline] (S1Tb) -- (14.8,2.5);
+                    \draw[tensorline] (14.8,-0.075) -- (14.8,5.075);
+        \end{tikzpicture}
+    \end{center}
+    
+    \vspace{-10pt}
+    
+    \footnotesize Part of \fullcite{AguilaPla2019}
+\end{frame}
+\begin{frame}{Summary - Diagram mode (simply TikZ)}
+    \begin{itemize}
+        \item<+-> Diagram mode keywords: \texttt{node}, \texttt{anchor}, \texttt{draw}, \texttt{rotate}, \texttt{opacity}, \texttt{--},  \texttt{-- ++}, \texttt{-}, \texttt{->}, \texttt{<-}, \texttt{thick}, \texttt{very thin}, \texttt{dashed}, \texttt{dotted}, \texttt{dashdotted}, \texttt{midway}, \texttt{below}, \texttt{fill}
+        \item<+-> \texttt{\textbackslash node[draw] (a) at (-1,0) \{[A]\}; \textbackslash node (b) at (1,0) \{[B]\}; \textbackslash draw[<->] (a) -- (b);}
+        \begin{center}
+            \begin{tikzpicture}
+                \node[draw] (a) at (-1,0) {[A]}; \node (b) at (1,0) {[B]}; \draw[<->] (a) -- (b);
+            \end{tikzpicture}
+        \end{center}
+        \item<+-> \texttt{\textbackslash node[draw,shape=circle,rotate=90] at (-1,0) \{\$1\$\}; \textbackslash node[draw=blue,very thick,shape=circle,fill=red,opacity=0.5,anchor=south] (b) at (1,0) \{\$2\$\}; \textbackslash draw[-latex,thick,dashdotted] (a.south) --++ (0,-0.4) --++ (1,0) -- (b.west) node[midway,above,rotate=60] \{middle\};}
+        \begin{center}
+            \begin{tikzpicture}
+                \node[draw,shape=circle,rotate=90] at (-1,0) {$1$}; \node[draw=blue,very thick,shape=circle,fill=red,opacity=0.5,anchor=south] (b) at (1,0) {$2$}; \draw[-latex,thick,dashdotted] (a.south) --++ (0,-0.4) --++  (1,0) -- (b.west) node[midway,above,rotate=60] {middle};
+            \end{tikzpicture}
+        \end{center}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{The same tools + 3D - Diagram mode (simply TikZ)}
+    
+    \vspace{-15pt}
+
+    \begin{center}
+        % Thanks to the array package, it is easy to creat cells with paragraph structure (text folding at the end of line, etc.). You need to specify the width, however.
+        \begin{tabular}{m{.5\textwidth}m{.4\textwidth}}
+            % The practical way of handling TikZ figures, as separate .tex files you input
+            \input{figs/discretization_grid}
+            &
+            \begin{itemize}
+                \item More concepts and keywords: \texttt{\textbackslash def}, \texttt{\textbackslash foreach}, \texttt{\textbackslash pgfmathsetmacro}, \texttt{gray!40!blue}, \texttt{\textbackslash newcommand}
+            \end{itemize}
+            {\footnotesize 
+            Part of \fullcite{AguilaPla2017}
+            }
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Simple plotting - Diagram mode (simply TikZ)}
+
+    \vspace{-10pt}
+    
+    \begin{center}
+        \begin{tikzpicture}[xscale=1,yscale=15]
+            % Draw axis
+                \draw [->] (0,0) -- (0,0.3) node [anchor=south] {$f_x(x)$};
+                \draw [->] (-5,0) -- (5.1,0) node [anchor=west] {$x$};
+            % Draw ticks and labels
+            % X axis
+                \foreach \x in {-5, -4, ..., 5}
+                    \draw (\x,0) node[anchor=north] {\scriptsize $\x$};
+            % Y axis
+                \foreach \y/\ytext in {0.125/\tfrac{1}{8},0.25/\tfrac{1}{4}}
+                    \draw (0,\y) node[anchor=west] {\scriptsize $\ytext$};
+            
+            % Plot for the actual distribution
+                \draw[smooth,domain=-5:5,samples=400] plot 
+                function{ (1/sqrt(2*pi))*( % Gaussian normalization factor (with std = 1)
+                0.5*sqrt(2)*exp((-(x+2)**2))+ % Gaussian with weight (prob) 0.25 and stdeviation 1/sqrt(2) around -2
+                0.5*exp((-(x-1)**2)/2))}; % Gaussain with weight (prob) 0.75 and stdeviation 1 around 1
+            
+            % Plot sampled data
+                % The file data.txt is only two columns of numbers separated by spaces
+                \draw plot[only marks, mark=*, mark size=0.07pt, mark options={color=red!80}] file{figs/data.txt};
+                
+            % Plot histogram estimation
+                \draw[fill=orange, fill opacity=0.5] plot[ybar] file{figs/hist.txt};
+                \draw[orange] node at (4,0.27) {\scriptsize Histogram};
+            
+            % Plot parametric model fittings
+                \draw[color=blue] plot[smooth] file{figs/gen_pareto.txt};
+                \draw[color=red] plot[smooth] file{figs/gen_extr_value.txt};
+                \draw[color=green] plot [smooth] file{figs/normal.txt};
+            
+            % Names of parametric model fittings (note the equivalence between \node and \draw node
+                \node at (4,0.30) {\scriptsize True distribution};
+                \draw[color=blue] node at (4,0.24) {\scriptsize Generalized Pareto};
+                \draw[color=red] node at (4,0.21) {\scriptsize Generalized Extreme Value};
+                \draw[color=green] node at (4,0.18) {\scriptsize Normal};
+            
+      \end{tikzpicture}
+      \end{center}
+      
+      \vspace{-20pt}
+      
+      \begin{itemize}
+          \item More concepts and keywords: \texttt{plot file}, \texttt{smooth}, \texttt{ybar}, \texttt{plot function}, \texttt{domain}, \texttt{samples}
+      \end{itemize}
+      
+      \small Part of an old presentation - will not be published.
+      
+\end{frame}
+
+\begin{frame}{Scripted plotting - Diagram mode (simply TikZ)}
+    
+    \vspace{-15pt}
+    
+    \begin{center}
+        % See file, mainly generated by a MATLAB script that writes out TikZ lines after computing the statistics of the results. Extremely easy to script using fprintf onto an open file.
+        \input{figs/vs_NC_NL3+4_new_with_human}
+    \end{center}
+    
+    \vspace{-15pt}
+    
+    \begin{itemize}
+        \item Easily scripted
+    \end{itemize}
+    {\footnotesize 
+    Part of \fullcite{AguilaPla2017a}
+    }
+            
+\end{frame}
+
+\begin{frame}{Easier plotting - PGFplots}
+    \begin{columns}[T]
+        \begin{column}{.48\textwidth}
+            \begin{tikzpicture}
+                \begin{axis}[title = {$f(x) = x^2$},grid = major,xlabel = {$x$},ylabel = {$f(x)$},width=\textwidth]
+                    \addplot[domain = -1:1] {x^2};
+                \end{axis}
+            \end{tikzpicture}
+        \end{column}\hfill
+        \begin{column}{.48\textwidth}
+            \vspace{40pt}
+            \texttt{\textbackslash begin\{axis\}[
+            title = \{\$f(x) = x\^{}2\$\},grid = major,xlabel = \{\$x\$\},ylabel = \{\$f(x)\$\},]
+            \textbackslash addplot[domain = -1:1] \{x\^{}2\}; \textbackslash end\{axis\}}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Easier 3D plotting - PGFplots}
+    \begin{columns}[T]
+    \begin{column}{.45\textwidth}
+            \begin{tikzpicture}
+                \begin{axis}[title = {$f(x,y) = x^2 + y^2$},grid = major,xlabel = {$x$},ylabel = {$y$},zlabel={$f(x,y)$},width=\textwidth]
+                    \addplot3[surf,domain = -1:1,samples=20] {x^2+y^2};
+                \end{axis}
+            \end{tikzpicture}
+        \end{column}\hfill
+        \begin{column}{.48\textwidth}
+        
+            \vspace{30pt}
+        
+            \texttt{\textbackslash begin\{axis\}[ title = \{ \$f(x,y) = x\^{}2 + y\^{}2\$\}, grid = major, xlabel = \{\$x\$\}, ylabel = \{\$y\$\},zlabel=\{\$f(x,y)\$\},]
+                    \textbackslash addplot3[surf,domain = -1:1,samples=20] \{x\^{}2+y\^{}2\};
+                \textbackslash end\{axis\}}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{PGFplots from Python (matplotlib2tikz)}
+        \only<1>{
+            \begin{center}
+                \includegraphics[keepaspectratio=true,width=.95\textwidth]{figs/creating_example.png}
+            \end{center}
+        }
+        \only<2>{
+            \begin{columns}
+                \begin{column}{.58\textwidth}
+                    \input{figs/example}
+                \end{column}\hfill
+                \begin{column}{.4\textwidth}
+                    \texttt{\textbackslash input\{figs/example\} }
+                \end{column}
+            \end{columns}
+        }
+        \only<3>{
+            \input{figs/example_improved}
+            \begin{itemize}
+                \item less than $5$ minutes of work away (compare \texttt{figs/example.tex} with \texttt{figs/example\_improved.tex}).
+            \end{itemize}
+        }
+\end{frame}
+
+\begin{frame}{PGFplots from Python (matplotlib2tikz)}
+    \input{figs/convergence_networks}
+    
+    \footnotesize Part of \fullcite{AguilaPla2019}
+\end{frame}
+
+\begin{frame}{Practical TikZ Tutorial - Remarks}
+    \begin{itemize}
+        \item Use the same styles (fonts, font sizes, math symbols, etc.) across your papers, i.e., in your figures, in your text, etc.
+        \item Work only with scalable graphics
+        \item Put no limits on the drawing possibilities
+        \item Re-use drawings and figures, get your time back
+        \item Use TikZ :-D
+    \end{itemize}
+    A word of warning: local compilation will require \texttt{pdflatex -shell-escape} or \texttt{pdflatex --shell-escape} for many of the examples.
+\end{frame}
+
+\end{document}

@@ -1,0 +1,36 @@
+% Thought for use inside discretization_grid.tex only. Takes ``arguments'' from defined macros and
+% plots the corresponding discretization region.	
+	
+	% Set PGF variables as mathematical expressions of other variables
+	    \pgfmathsetmacro{\mpo}{\m+1} \pgfmathsetmacro{\npo}{\n+1}
+	% Draw square on xy plane
+	    \draw[dashed] (\xmin+\n*\xbynbins,0,\ymin+\m*\ybynbins) -- (\xmin+\npo*\xbynbins,0,\ymin+\m*\ybynbins) --
+			(\xmin+\npo*\xbynbins,0,\ymin+\mpo*\ybynbins) -- (\xmin+\n*\xbynbins,0,\ymin+\mpo*\ybynbins) --
+			(\xmin+\n*\xbynbins,0,\ymin+\m*\ybynbins);
+	% Throw lines from the corners of the selected xy square
+	    \draw[thin,dashed,gray!60] (\xmin+\n*\xbynbins,0,\ymin+\m*\ybynbins) -- (\xmin+\n*\xbynbins,\sigmaxn,\ymin+\m*\ybynbins);
+	    \draw[thin,dashed,gray!60] (\xmin+\npo*\xbynbins,0,\ymin+\m*\ybynbins) -- (\xmin+\npo*\xbynbins,\sigmaxn,\ymin+\m*\ybynbins);
+	    \draw[thin,dashed,gray!60] (\xmin+\npo*\xbynbins,0,\ymin+\mpo*\ybynbins) -- (\xmin+\npo*\xbynbins,\sigmaxn,\ymin+\mpo*\ybynbins);
+	    \draw[thin,dashed,gray!60] (\xmin+\n*\xbynbins,0,\ymin+\mpo*\ybynbins) -- (\xmin+\n*\xbynbins,\sigmaxn,\ymin+\mpo*\ybynbins);
+	% Draw selected segment on \sigma dimension
+	    \draw[dashed] (.25*\xdist,\sigselmin*\lofsig,0) -- (.25*\xdist,\sigselmax*\lofsig,0);
+	% Throw lines from the corners of the selected segment
+	    \draw[thin,dashed,gray!60] (.25*\xdist,\sigselmin*\lofsig,0) -- (\xmax,\sigselmin*\lofsig,0);
+	    \draw[thin,dashed,gray!60] (.25*\xdist,\sigselmax*\lofsig,0) -- (\xmax,\sigselmax*\lofsig,0);
+	% Draw selected segment on \sigma-x plane
+	    \draw[dashed] (\xmin+\n*\xbynbins,\sigselmin*\lofsig,0) -- (\xmin+\npo*\xbynbins,\sigselmin*\lofsig,0) -- (\xmin+\npo*\xbynbins,\sigselmax*\lofsig,0) -- (\xmin+\n*\xbynbins,\sigselmax*\lofsig,0) -- (\xmin+\n*\xbynbins,\sigselmin*\lofsig,0);
+	% Throw lines upwards from the corners of the selected \sigma-x square
+	    \draw[thin,dashed,gray!60] (\xmin+\n*\xbynbins,\sigselmin*\lofsig,0) -- (\xmin+\n*\xbynbins,\sigselmin*\lofsig,\ymax);
+	    \draw[thin,dashed,gray!60] (\xmin+\npo*\xbynbins,\sigselmin*\lofsig,0) -- (\xmin+\npo*\xbynbins,\sigselmin*\lofsig,\ymax);
+	    \draw[thin,dashed,gray!60] (\xmin+\npo*\xbynbins,\sigselmax*\lofsig,0) -- (\xmin+\npo*\xbynbins,\sigselmax*\lofsig,\ymax);
+	    \draw[thin,dashed,gray!60] (\xmin+\n*\xbynbins,\sigselmax*\lofsig,0) -- (\xmin+\n*\xbynbins,\sigselmax*\lofsig,\ymax);
+	% Highlight selected discretization region	
+		% Foreground cube layer
+		    \draw[thick] (\xmin+\n*\xbynbins,\sigselmin*\lofsig,\ymin+\m*\ybynbins) -- (\xmin+\n*\xbynbins,\sigselmin*\lofsig,\ymin+\mpo*\ybynbins) -- (\xmin+\n*\xbynbins,\sigselmax*\lofsig,\ymin+\mpo*\ybynbins) -- (\xmin+\n*\xbynbins,\sigselmax*\lofsig,\ymin+\m*\ybynbins) -- cycle;
+		% Unseen cube lines
+		    \draw[thick,dashed] (\xmin+\n*\xbynbins,\sigselmin*\lofsig,\ymin+\m*\ybynbins) -- (\xmin+\npo*\xbynbins,\sigselmin*\lofsig,\ymin+\m*\ybynbins) -- (\xmin+\npo*\xbynbins,\sigselmax*\lofsig,\ymin+\m*\ybynbins);
+		    \draw[thick,dashed] (\xmin+\npo*\xbynbins,\sigselmin*\lofsig,\ymin+\m*\ybynbins) -- (\xmin+\npo*\xbynbins,\sigselmin*\lofsig,\ymin+\mpo*\ybynbins);
+		% Lid cube layer
+		    \draw[thick] (\xmin+\n*\xbynbins,\sigselmin*\lofsig,\ymin+\mpo*\ybynbins) -- (\xmin+\npo*\xbynbins,\sigselmin*\lofsig,\ymin+\mpo*\ybynbins) -- (\xmin+\npo*\xbynbins,\sigselmax*\lofsig,\ymin+\mpo*\ybynbins) -- (\xmin+\n*\xbynbins,\sigselmax*\lofsig,\ymin+\mpo*\ybynbins) -- cycle;
+		% Remaining cube lines
+		\draw[thick] (\xmin+\npo*\xbynbins,\sigselmax*\lofsig,\ymin+\mpo*\ybynbins) -- (\xmin+\npo*\xbynbins,\sigselmax*\lofsig,\ymin+\m*\ybynbins) --	(\xmin+\n*\xbynbins,\sigselmax*\lofsig,\ymin+\m*\ybynbins);

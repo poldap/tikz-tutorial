@@ -1,0 +1,97 @@
+% Mathematical macros needed (related to paper content)
+\newcommand{\supp}[1]{\operatorname{supp}\left( #1 \right)}
+\def\sigmax{\sigma_{\max}}
+\def\dsigma{\tilde{\sigma}}
+\renewcommand{\complement}[1]{#1^{\mathsf{c}}}
+
+% Define scaling variable
+\def\sca{0.73}
+% Set perspective for 3D rendering
+\tdplotsetmaincoords{70}{110}
+
+\begin{tikzpicture}[tdplot_main_coords,scale=\sca]
+	% Define variables for drawing 
+    	% Margin distance in x and min and max for sigma
+		    \def\xdist{3.5} \def\sigminn{0} \def\sigmaxn{4.5}
+	    % Margin distance in sigma and min and max for spatial coordinates
+		    \def\sigdist{-2} \def\xmin{-.5} \def\xmax{-6} \def\ymin{0.25} \def\ymax{3.5}
+		    
+	% Draw support of spatial masking function 
+		% Limits of spatial coordinates
+		    \draw[blue] plot coordinates {(\xmin,\sigdist,\ymin) (\xmax,\sigdist,\ymin) (\xmax,\sigdist,\ymax) (\xmin,\sigdist,\ymax) (\xmin,\sigdist,\ymin)};
+		    \node[color=blue] at (\xmax,\sigdist-1,\ymax+.2) {$\supp{\mu}$};
+		% Guiding lines (observe \foreach)
+		    \foreach \x in {\xmin,\xmax} {
+			    \foreach \y in {\ymin,\ymax}{
+				    \draw[thin,dashed,blue] (\x,\sigdist,\y) -- (\x,0,\y);
+			    }
+		    }
+		
+	% Grid for discretization of the spatial component
+		% Configure variables
+		    \def\nbins{5} \def\binsextra{2}
+		% Set PGF variables as mathematical expressions of other variables
+		    \pgfmathsetmacro{\nbinsextrapo}{-\binsextra +1} \pgfmathsetmacro{\nbinsextra}{\nbins +\binsextra}
+		    \pgfmathsetmacro{\xbynbins}{(\xmax-\xmin)/\nbins} \pgfmathsetmacro{\ybynbins}{(\ymax-\ymin)/\nbins}
+		% Draw spatial grid
+		% Observe \foreach extrapolation \n in {0, 1, ..., 5}
+		    \foreach \n in {-\binsextra, \nbinsextrapo, ...,\nbinsextra}{
+			    % X divisions
+			        \draw[gray!40,thin] (\xmin + \n*\xbynbins,0,\ymin-\binsextra*\ybynbins) -- (\xmin + \n*\xbynbins,0,\ymin+\nbinsextra*\ybynbins);
+			    % Y divisions
+			        \draw[gray!40,thin] (\xmin-\binsextra*\xbynbins,0,\ymin + \n*\ybynbins) -- (\xmin+\nbinsextra*\xbynbins,0,\ymin + \n*\ybynbins);
+		    }
+		% Draw box around spatial grid
+		    \draw[thin] (\xmin -\binsextra*\xbynbins,0,\ymin-\binsextra*\ybynbins) -- (\xmin+\nbinsextra*\xbynbins,0,\ymin-\binsextra*\ybynbins) -- (\xmin+\nbinsextra*\xbynbins,0,\ymin+\nbinsextra*\ybynbins) node[anchor=south] {\textcolor{gray}{sensor's grid}} --	(\xmin-\binsextra*\xbynbins,0,\ymin+\nbinsextra*\ybynbins) -- cycle;
+		% Draw mask support on the same level as the sensor grid
+		\draw[blue,thin,dashed] plot coordinates {(\xmin,0,\ymin) (\xmax,0,\ymin) (\xmax,0,\ymax) (\xmin,0,\ymax) (\xmin,0,\ymin)};
+		
+	% Draw sigma discretization grid
+		% Limits of sigma regions (note path does not end until ;)
+		    \draw[red] (.1+\xdist,0,0) -- (-.1+\xdist,0,0) -- % Beginning tick
+			(\xdist,\sigminn,0)  -- node[midway,below]{$\left[0,\sigmax\right]$} (\xdist,\sigmaxn,0) -- % Margins
+			(.1+\xdist,\sigmaxn,0) -- (-.1+\xdist,\sigmaxn,0); % Ending tick
+		% Guiding lines
+		    \draw[thin,dashed,red] (\xdist,0,0) -- (0,0,0);
+		    \draw[thin,dashed,red] (\xdist,4.5,0) -- (0,4.5,0);
+		% Line for marking discretization of sigma
+		    \draw[gray,thin] (.25*\xdist,\sigminn,0) -- (.25*\xdist,\sigmaxn,0);
+		% Set PGF variable to length of sigma 
+ 		    \pgfmathsetmacro{\lofsig}{\sigmaxn-\sigminn}
+ 		% Mark discretization of sigma in line
+ 		    \foreach \prop in {0, .15, .25, .333, .5, .75, 1}{
+			    \draw (.1+.25*\xdist,\prop*\lofsig,0) -- (-.1+.25*\xdist,\prop*\lofsig,0);
+ 			}
+ 		% Mark set of sigmas aleph and its complement
+     		\draw[red,thin] (.5*\xdist,\sigminn,0) -- node[midway,below]{\scriptsize $\aleph$} (.5*\xdist,\sigminn+.75*\lofsig,0);
+     		\draw[red,thin] (.5*\xdist,\sigminn+.75*\lofsig,0) -- node[midway,below]{\scriptsize $\complement{\aleph}$} (.5*\xdist,\sigmaxn,0);
+ 		% Guiding lines for aleph and its complement
+     		\foreach \prop in {0, .75, 1}{
+    			% Divisions in sigma axis
+     			\draw[red,thin] (.1+.5*\xdist,\prop*\lofsig,0) -- (-.1+.5*\xdist,\prop*\lofsig,0);
+     			% Divisions in 2D Space
+     			\draw[red,thin,dashed] (.5*\xdist,\prop*\lofsig,0) -- (0,\prop*\lofsig,0);
+     		}
+	
+	% Draw discrete axis (m,n,k)
+	    % Spatial axis (m,n)
+	        \draw[thick,->] (\xmin-\binsextra*\xbynbins,0,\ymin-\binsextra*\ybynbins) -- (\xmin-\binsextra*\xbynbins+.5*\xbynbins,0,\ymin-\binsextra*\ybynbins) node[anchor=west]{\tiny $\mathbf{n}$};
+	        \draw[thick,->] (\xmin-\binsextra*\xbynbins,0,\ymin-\binsextra*\ybynbins) -- (\xmin-\binsextra*\xbynbins,0,\ymin+.5*\ybynbins-\binsextra*\ybynbins) node[anchor=east]{\tiny $\mathbf{m}$};
+	    % Third dimension k
+	        \draw[thick,->] (.25*\xdist,0,0) -- (.25*\xdist,.08*\lofsig,0) node[anchor=north east]{\tiny $\mathbf{k}$};
+	
+	% Draw example discretization regions
+	    % Set parameters for the region to draw
+	    \def\m{2} \def\n{1} \def\sigselmin{.15} \def\sigselmax{.25} 
+	    % Call external (parametrized) tikz code
+    	\input{figs/discretization_reg}
+	    % Set parameters for the region to draw
+	    \def\m{4} \def\n{4} \def\sigselmin{.75} \def\sigselmax{1} 
+	    % Call external (parametrized) tikz code
+	    \input{figs/discretization_reg}
+	
+	% Draw coordinate axis (x,\sigma,y)
+	    \draw[thick,->] (0,0,0) -- (-9,0,0) node[anchor=north west]{$x$};
+	    \draw[thick,->] (0,0,0) -- (0,5,0) node[anchor=south east]{$\dsigma$};
+	    \draw[thick,->] (0,0,0) -- (0,0,5) node[anchor=south]{$y$};
+\end{tikzpicture}
